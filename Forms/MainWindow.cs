@@ -178,7 +178,17 @@ namespace lyric_matcher
             foreach (KeyValuePair<string, string> kv in MusicFile)
             {
                 if (!File.Exists($"{kv.Value}.lrc") || checkBox_overWrite.Checked)
-                    File.WriteAllText($"{kv.Value}.lrc", Func.DownloadLyricByID(Func.SearchMusic(kv.Key)[0]["id"]));
+                {
+                    try
+                    {
+                        File.WriteAllText($"{kv.Value}.lrc", Func.DownloadLyricByID(Func.SearchMusic(kv.Key)[0]["id"]));
+                    }
+                    catch (System.NullReferenceException)
+                    {
+
+                        continue;
+                    }
+                }
                 Action action = () => progressBar1.Value++;
                 progressBar1.Invoke(action);
             }

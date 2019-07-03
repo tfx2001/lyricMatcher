@@ -21,12 +21,19 @@ namespace lyric_matcher.Classes
             {
                 foreach (string file in Directory.GetFileSystemEntries(currentPath))
                 {
-                    if (!File.Exists(file))
-                        result = result.Concat(RecursiveSearch(file)).ToDictionary(k => k.Key, v => v.Value);
-                    else
+                    try
                     {
-                        if (new string[] { ".mp3", ".flac", ".ape" }.Contains(Path.GetExtension(file).ToLower()))
-                            result[Path.GetFileNameWithoutExtension(file)] = $"{Path.GetDirectoryName(file)}\\{Path.GetFileNameWithoutExtension(file)}";
+                        if (!File.Exists(file))
+                            result = result.Concat(RecursiveSearch(file)).ToDictionary(k => k.Key, v => v.Value);
+                        else
+                        {
+                            if (new string[] { ".mp3", ".flac", ".ape" }.Contains(Path.GetExtension(file).ToLower()))
+                                result[Path.GetFileNameWithoutExtension(file)] = $"{Path.GetDirectoryName(file)}\\{Path.GetFileNameWithoutExtension(file)}";
+                        }
+                    }
+                    catch(System.ArgumentException)
+                    {
+                        continue;
                     }
 
                 }
